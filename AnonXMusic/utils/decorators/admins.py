@@ -1,4 +1,4 @@
-from pyrogram.enums import ChatType
+from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from AnonXMusic import app
@@ -148,12 +148,10 @@ def AdminActual(mystic):
             return await message.reply_text(_["general_3"], reply_markup=upl)
         if message.from_user.id not in SUDOERS:
             try:
-                member = (
-                    await app.get_chat_member(message.chat.id, message.from_user.id)
-                ).privileges
+                member = await app.get_chat_member(message.chat.id, message.from_user.id)
             except:
                 return
-            if not member.can_manage_video_chats:
+            if not member.status == ChatMemberStatus.ADMINISTRATOR:
                 return await message.reply(_["general_4"])
         return await mystic(client, message, _)
 
@@ -178,15 +176,13 @@ def ActualAdminCB(mystic):
         is_non_admin = await is_nonadmin_chat(CallbackQuery.message.chat.id)
         if not is_non_admin:
             try:
-                a = (
-                    await app.get_chat_member(
+                a = await app.get_chat_member(
                         CallbackQuery.message.chat.id,
                         CallbackQuery.from_user.id,
-                    )
-                ).privileges
+                )
             except:
                 return await CallbackQuery.answer(_["general_4"], show_alert=True)
-            if not a.can_manage_video_chats:
+            if not a.status == ChatMemberStatus.ADMINISTRATOR:
                 if CallbackQuery.from_user.id not in SUDOERS:
                     token = await int_to_alpha(CallbackQuery.from_user.id)
                     _check = await get_authuser_names(CallbackQuery.from_user.id)

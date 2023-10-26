@@ -2,7 +2,7 @@ import asyncio
 import time
 
 from pyrogram import filters
-from pyrogram.enums import ChatMembersFilter
+from pyrogram.enums import ChatMembersFilter, ChatMemberStatus
 from pyrogram.types import CallbackQuery, Message
 
 from AnonXMusic import app
@@ -33,7 +33,7 @@ async def reload_admin_cache(client, message: Message, _):
         async for user in app.get_chat_members(
             message.chat.id, filter=ChatMembersFilter.ADMINISTRATORS
         ):
-            if user.privileges.can_manage_video_chats:
+            if user.status == ChatMemberStatus.ADMINISTRATOR:
                 adminlist[message.chat.id].append(user.user.id)
         authusers = await get_authuser_names(message.chat.id)
         for user in authusers:
