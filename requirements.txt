@@ -11,7 +11,7 @@ motor
 ntgcalls
 pillow
 psutil
-py-tgcalls==1.0.0rc4
+py-tgcalls
 pykeyboard
 pyrogram
 python-dotenv
